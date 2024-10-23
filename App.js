@@ -9,47 +9,42 @@ export default function App() {
 
   const handlePress = (value) => {
     if (display.length < 45) {
-      if (value === 'sin') {
-        setDisplay(display + 'Math.sin((');
-      } else if (value === 'cos') {
-        setDisplay(display + 'Math.cos((');
-      } else if (value === 'tan') {
-        setDisplay(display + 'Math.tan((');
-      } else if (value === 'log') {
-        setDisplay(display + 'Math.log(');  
-      } else {
-        setDisplay(display + value);
-      }
+      setDisplay(display + value);
     }
   };
-  
-  
 
   const calculateResult = () => {
     try {
+      // Validar división por cero
       if (display.includes('/0')) {
         throw new Error('División por cero');
       }
-  
-      
+
+      // Validar tangente en 90° y 270°
+      if (display.includes('Math.tan(90') || display.includes('Math.tan(270')) {
+        throw new Error('Error: Tangente no definida en 90° y 270°');
+      }
+
       const expression = display
-      .replace(/Math\.sin\(/g, 'Math.sin((Math.PI / 180) * ')  
-      .replace(/Math\.cos\(/g, 'Math.cos((Math.PI / 180) * ')  
-      .replace(/Math\.tan\(/g, 'Math.tan((Math.PI / 180) * ');
-  
-      const evalResult = eval(expression); 
-      setSmallDisplay(display); 
-      setResult(evalResult.toString()); 
-      setDisplay(''); 
+        .replace(/Math\.sin\(/g, 'Math.sin((Math.PI / 180) * ')
+        .replace(/Math\.cos\(/g, 'Math.cos((Math.PI / 180) * ')
+        .replace(/Math\.tan\(/g, 'Math.tan((Math.PI / 180) * ')
+        .replace(/sqrt\(/g, 'Math.sqrt('); // Reemplazar sqrt por Math.sqrt
+
+      const evalResult = eval(expression);
+      setSmallDisplay(display);
+      setResult(evalResult.toString());
+      setDisplay('');
     } catch (error) {
       if (error.message === 'División por cero') {
         setResult('Error: División por 0');
+      } else if (error.message === 'Error: Tangente no definida en 90° y 270°') {
+        setResult('Error: Tangente no definida');
       } else {
         setResult('Error');
       }
     }
   };
-  
 
   const clearDisplay = () => {
     setDisplay('');
@@ -97,6 +92,22 @@ export default function App() {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handlePress('Math.log(')} style={styles.button}>
             <Text style={styles.buttonText}>log</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Nueva fila para raíz cuadrada y potencia */}
+        <View style={styles.row}>
+          <TouchableOpacity onPress={() => handlePress('sqrt(')} style={styles.button}>
+            <Text style={styles.buttonText}>√</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('**')} style={styles.button}>
+            <Text style={styles.buttonText}>^</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('0')} style={styles.button}>
+            <Text style={styles.buttonText}>0</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('.')} style={styles.button}>
+            <Text style={styles.buttonText}>.</Text>
           </TouchableOpacity>
         </View>
 
@@ -150,12 +161,6 @@ export default function App() {
 
         {/* Última fila */}
         <View style={styles.row}>
-          <TouchableOpacity onPress={() => handlePress('0')} style={styles.button}>
-            <Text style={styles.buttonText}>0</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('.')} style={styles.button}>
-            <Text style={styles.buttonText}>.</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => handlePress('+')} style={styles.button}>
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
@@ -222,4 +227,3 @@ const styles = StyleSheet.create({
     color: '#FFF',  // Texto claro
   },
 });
-
