@@ -8,7 +8,7 @@ export default function App() {
   const [smallDisplay, setSmallDisplay] = useState('');
 
   const handlePress = (value) => {
-    if (display.length < 45) {
+    if (display.length < 55) {
       setDisplay(display + value);
     }
   };
